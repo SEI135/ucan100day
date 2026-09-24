@@ -7,7 +7,7 @@
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 :root{
-  --paper:#F0F0F0; --paper-2:#262D28; --ink:#C8A2C8; --ink-soft:#B7B0A0;
+  --paper:#362828; --paper-2:#262D28; --ink:#C8A2C8; --ink-soft:#B7B0A0;
   --accent:#A6472A; --accent-2:#6E7F5C; --line:#4A5148; --card:#2A322C;
   --shadow: 0 3px 10px rgba(38,50,61,.18);
   box-sizing:border-box;
