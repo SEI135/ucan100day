@@ -9,12 +9,12 @@
 :root:not([data-theme="light"]) { }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#F0F0F0; --paper-2:#262D28; --ink:#C8A2C8; --ink-soft:#B7B0A0;
+    --paper:#1E2420; --paper-2:#262D28; --ink:#EDE6D6; --ink-soft:#B7B0A0;
     --card:#2A322C; --line:#4A5148; --shadow:0 3px 10px rgba(0,0,0,.4);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#1E2420; --paper-2:#262D28; --ink:#C8A2C8; --ink-soft:#B7B0A0;
+  --paper:#1E2420; --paper-2:#262D28; --ink:#EDE6D6; --ink-soft:#B7B0A0;
   --card:#2A322C; --line:#4A5148; --shadow:0 3px 10px rgba(0,0,0,.4);
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px);}
