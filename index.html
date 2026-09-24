@@ -19,7 +19,24 @@
             <div id="banner" class="banner" style="display:none;"></div>
             <div id="setup" class="setup" style="display:none;">
         </div>
+        <div class="counter"></div>
+            <script>
+            const counter = document.querySelector('.counter');
 
+            const today = new Date();
+            const dday = new Date("2027-01-01T00:00:00");
+
+            const gap = dday - today;
+            const days = Math.ceil(gap / (1000 * 60 * 60 * 24));
+
+            if (days > 0) {
+                counter.innerHTML = `D-${days}`;
+            } else if (days === 0) {
+                counter.innerHTML = 'D-Day';
+            } else {
+                counter.innerHTML = `D+${Math.abs(days)}`;
+            }
+            </script>
         <button class="fab" id="fabBtn" style="display: none;" onclick="openModal()">+ 사진 올리기</button>
     
         <div class="modal-bg" id="modalBg">
