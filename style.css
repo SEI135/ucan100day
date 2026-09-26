@@ -32,6 +32,32 @@ header p{color:var(--ink-soft); font-size:15px; line-height:1.6;}
   font-family:"Special Elite",monospace; font-size:13px; color:var(--ink-soft);
 }
 .stats b{color:var(--accent); font-size:16px; display:block; font-family:"Fraunces",serif;}
+.counter {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff; /* Set text color */
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 20px; /* Optional: for better spacing */
+    border-radius: 10px; /* Optional: for a rounded border */
+}
+
+@media screen and (max-width: 1023px) {
+    .counter {
+        font-size: 20px;
+        padding: 8px 16px;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .counter {
+        font-size: 16px;
+        padding: 6px 12px;
+    }
+}
 
 .board{
   display:flex; gap:16px; overflow-x:auto; padding:8px 4px 20px;
