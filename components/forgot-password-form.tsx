@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function UpdatePasswordForm() {
+export default function ForgotPasswordForm() {
   const supabase = createClient();
 
   const [password, setPassword] = useState("");
