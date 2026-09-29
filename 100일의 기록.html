@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>100일의 기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1ECDC; --paper-2:#E7DFC6; --ink:#26323D; --ink-soft:#5A6672;
+  --accent:#A6472A; --accent-2:#6E7F5C; --line:#C7BC9C; --card:#FBF8F0;
+  --shadow: 0 3px 10px rgba(38,50,61,.18);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1E2420; --paper-2:#262D28; --ink:#EDE6D6; --ink-soft:#B7B0A0;
+    --card:#2A322C; --line:#4A5148; --shadow:0 3px 10px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1E2420; --paper-2:#262D28; --ink:#EDE6D6; --ink-soft:#B7B0A0;
+  --card:#2A322C; --line:#4A5148; --shadow:0 3px 10px rgba(0,0,0,.4);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--paper); color:var(--ink); min-height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+.wrap{max-width:100%;padding:28px 20px 40px;}
+header{max-width:640px;margin:0 auto 28px;text-align:center;}
+h1{
+  font-family:"Fraunces",serif; font-weight:600; font-size:clamp(28px,5vw,42px);
+  letter-spacing:-.01em; margin-bottom:8px;
+}
+header p{color:var(--ink-soft); font-size:15px; line-height:1.6;}
+.stats{
+  display:flex; justify-content:center; gap:22px; margin-top:16px;
+  font-family:"Special Elite",monospace; font-size:13px; color:var(--ink-soft);
+}
+.stats b{color:var(--accent); font-size:16px; display:block; font-family:"Fraunces",serif;}
+
+.board{
+  display:flex; gap:16px; overflow-x:auto; padding:8px 4px 20px;
+  scroll-snap-type:x proximity;
+}
+.day-col{
+  scroll-snap-align:start; flex:0 0 160px; display:flex; flex-direction:column; gap:10px;
+}
+.day-head{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  font-family:"Special Elite",monospace; font-size:14px; color:var(--card);
+  background:var(--ink); border-radius:50%; width:64px; height:64px; margin:0 auto;
+  flex-direction:column; box-shadow:var(--shadow); position:relative;
+}
+.day-head.today{background:var(--accent);}
+.day-head small{font-size:9px; opacity:.75;}
+.day-date{text-align:center; font-size:11px; color:var(--ink-soft); font-family:"Special Elite",monospace;}
+
+.stamp{
+  background:var(--card); border:2px dashed var(--line); border-radius:6px;
+  padding:8px 8px 10px; box-shadow:var(--shadow); position:relative;
+}
+.day-col:nth-child(odd) .stamp{transform:rotate(-1.1deg);}
+.day-col:nth-child(even) .stamp{transform:rotate(1.1deg);}
+.stamp img{width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:2px; display:block; background:var(--paper-2);}
+.stamp .nick{
+  font-family:"Special Elite",monospace; font-size:12px; margin-top:7px; color:var(--ink);
+}
+.stamp .goal{font-size:11.5px; color:var(--accent-2); margin-top:2px; line-height:1.4;}
+
+.add-btn{
+  border:1.5px dashed var(--line); border-radius:6px; background:none; color:var(--ink-soft);
+  font-size:12px; padding:14px 6px; cursor:pointer; font-family:inherit;
+}
+.add-btn:hover{border-color:var(--accent); color:var(--accent);}
+
+.fab{
+  position:fixed; right:20px; bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  background:var(--accent); color:#fff; border:none; border-radius:30px; padding:14px 20px;
+  font-size:14px; font-weight:600; box-shadow:var(--shadow); cursor:pointer;
+}
+
+.modal-bg{
+  display:none; position:fixed; inset:0; background:rgba(20,20,15,.5); z-index:50;
+  align-items:center; justify-content:center; padding:20px;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--paper); border-radius:12px; padding:22px; max-width:360px; width:100%;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+}
+.modal h2{font-family:"Fraunces",serif; font-size:20px; margin-bottom:14px;}
+.field{margin-bottom:12px;}
+.field label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+.field input, .field textarea{
+  width:100%; border:1px solid var(--line); background:var(--card); color:var(--ink);
+  border-radius:6px; padding:9px 10px; font-size:14px; font-family:inherit;
+}
+.field textarea{resize:none; height:56px;}
+.modal-actions{display:flex; gap:8px; margin-top:16px;}
+.modal-actions button{
+  flex:1; padding:11px; border-radius:6px; border:none; font-size:14px; cursor:pointer; font-family:inherit;
+}
+.btn-cancel{background:var(--paper-2); color:var(--ink);}
+.btn-submit{background:var(--accent); color:#fff; font-weight:600;}
+.btn-submit:disabled{opacity:.5;}
+
+.setup{max-width:340px; margin:60px auto; text-align:center;}
+.setup h2{font-family:"Fraunces",serif; font-size:22px; margin-bottom:10px;}
+.setup p{color:var(--ink-soft); font-size:14px; margin-bottom:18px; line-height:1.6;}
+.banner{
+  max-width:640px; margin:0 auto 18px; text-align:center; font-size:12.5px;
+  color:var(--ink-soft); background:var(--paper-2); border-radius:8px; padding:8px 12px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>100일의 기록</h1>
+    <p>친구들과 함께 걷는 100일, 하루 한 장의 사진으로 남겨요.<br>D-100부터 D-DAY, 그리고 그 뒤로도 계속.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+  <div id="banner" class="banner" style="display:none;"></div>
+  <div id="setup" class="setup" style="display:none;">
+    <h2>챌린지를 시작해볼까요?</h2>
+    <p>D-100이 되는 시작일을 정해주세요.<br>이후 모든 친구가 이 날짜를 기준으로 사진을 올리게 돼요.</p>
+    <div class="field"><input type="date" id="startInput"></div>
+    <button class="btn-submit" style="width:100%;padding:11px;border:none;border-radius:6px;" onclick="setStartDate()">시작하기</button>
+  </div>
+  <div id="board" class="board" style="display:none;"></div>
+</div>
+
+<button class="fab" id="fabBtn" style="display:none;" onclick="openModal()">+ 사진 올리기</button>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2 id="modalDayLabel">오늘의 기록</h2>
+    <div class="field"><label>닉네임</label><input id="fNick" maxlength="20" placeholder="어떻게 불릴까요?"></div>
+    <div class="field"><label>오늘의 한마디 / 목표</label><textarea id="fGoal" maxlength="60" placeholder="예: 오늘도 5km 완주!"></textarea></div>
+    <div class="field"><label>사진</label><input type="file" id="fFile" accept="image/*"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-submit" id="submitBtn" onclick="submitPost()">올리기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let db=null, assets=null, startDate=null, posts=[], targetDay=null;
+
+const $=id=>document.getElementById(id);
+const DAY=86400000;
+
+function dayNumberOf(date){ return Math.floor((date - startDate)/DAY); }
+function labelOf(n){
+  if(n<99) return 'D-'+(100-n);
+  if(n===99) return 'D-1';
+  if(n===100) return 'D-DAY';
+  return 'D+'+(n-100);
+}
+function dateOfDay(n){ return new Date(startDate.getTime()+n*DAY); }
+function fmt(d){ return (d.getMonth()+1)+'.'+d.getDate(); }
+
+async function init(){
+  try{ db = await claude.use('db'); }catch(e){}
+  try{ assets = await claude.use('assets'); }catch(e){}
+  if(!db){
+    $('banner').style.display='block';
+    $('banner').textContent='공유 저장소를 사용할 수 없는 환경이에요. Claude에서 열어 친구들과 함께 사용해주세요.';
+  }
+  loadConfig();
+}
+
+function loadConfig(){
+  if(!db) return;
+  db.doc('challenge/config').onSnapshot(doc=>{
+    if(doc && doc.data && doc.data().startDate){
+      startDate = new Date(doc.data().startDate+'T00:00:00');
+      $('setup').style.display='none';
+      $('board').style.display='flex';
+      $('fabBtn').style.display='block';
+      subscribePosts();
+    } else {
+      $('setup').style.display='block';
+      $('board').style.display='none';
+      $('fabBtn').style.display='none';
+    }
+  });
+}
+
+async function setStartDate(){
+  const v=$('startInput').value;
+  if(!v || !db) return;
+  try{
+    await db.doc('challenge/config').set({startDate:v});
+  }catch(e){ alert('시작일 저장에 실패했어요. 권한을 확인해주세요.'); }
+}
+
+function subscribePosts(){
+  db.collection('posts').orderBy('day').onSnapshot(snap=>{
+    posts = snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  });
+}
+
+function render(){
+  const today = dayNumberOf(new Date());
+  const maxPost = posts.reduce((m,p)=>Math.max(m,p.day),0);
+  const maxDay = Math.max(today, maxPost, 100) + 5;
+  const board = $('board');
+  board.innerHTML='';
+  const byDay = {};
+  posts.forEach(p=>{ (byDay[p.day]=byDay[p.day]||[]).push(p); });
+
+  const nicks = new Set(posts.map(p=>p.nickname));
+  $('stats').innerHTML =
+    '<div><b>'+labelOf(today)+'</b>오늘</div>'+
+    '<div><b>'+nicks.size+'</b>참여 인원</div>'+
+    '<div><b>'+posts.length+'</b>총 기록</div>';
+
+  for(let n=0;n<=maxDay;n++){
+    const col=document.createElement('div');
+    col.className='day-col';
+    col.dataset.day=n;
+    const isToday = n===today;
+    col.innerHTML =
+      '<div class="day-head'+(isToday?' today':'')+'"><small>DAY '+n+'</small>'+labelOf(n)+'</div>'+
+      '<div class="day-date">'+fmt(dateOfDay(n))+'</div>';
+    const items = byDay[n]||[];
+    items.forEach(p=>{
+      const s=document.createElement('div');
+      s.className='stamp';
+      s.innerHTML = (p.imageUrl?'<img src="'+p.imageUrl+'" alt="">':'') +
+        '<div class="nick">'+escapeHtml(p.nickname||'익명')+'</div>'+
+        (p.caption?'<div class="goal">'+escapeHtml(p.caption)+'</div>':'');
+      col.appendChild(s);
+    });
+    if(n<=today+1){
+      const add=document.createElement('button');
+      add.className='add-btn'; add.textContent='+ 사진 추가';
+      add.onclick=()=>openModal(n);
+      col.appendChild(add);
+    }
+    board.appendChild(col);
+  }
+  requestAnimationFrame(()=>{
+    const t = board.querySelector('.day-col[data-day="'+today+'"]');
+    if(t) t.scrollIntoView({inline:'center', block:'nearest'});
+  });
+}
+
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+function openModal(n){
+  targetDay = (n===undefined) ? dayNumberOf(new Date()) : n;
+  $('modalDayLabel').textContent = labelOf(targetDay)+' 기록 남기기';
+  try{ const saved=localStorage.getItem('nick100'); if(saved) $('fNick').value=saved; }catch(e){}
+  $('fGoal').value=''; $('fFile').value='';
+  $('modalBg').classList.add('open');
+}
+function closeModal(){ $('modalBg').classList.remove('open'); }
+
+async function submitPost(){
+  const nick=$('fNick').value.trim();
+  const goal=$('fGoal').value.trim();
+  const file=$('fFile').files[0];
+  if(!nick){ alert('닉네임을 입력해주세요.'); return; }
+  if(!file){ alert('사진을 선택해주세요.'); return; }
+  if(!db || !assets){ alert('저장소를 사용할 수 없는 환경이에요.'); return; }
+  const btn=$('submitBtn'); btn.disabled=true; btn.textContent='올리는 중...';
+  try{
+    const up = await assets.upload(file);
+    await db.collection('posts').add({
+      day: targetDay, nickname: nick, caption: goal,
+      imageUrl: up.url, createdAt: Date.now()
+    });
+    try{ localStorage.setItem('nick100', nick); }catch(e){}
+    closeModal();
+  }catch(e){
+    alert('업로드에 실패했어요. 다시 시도해주세요.');
+  } finally {
+    btn.disabled=false; btn.textContent='올리기';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
